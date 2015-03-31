@@ -17,12 +17,12 @@ using Rock.Address;
 using RestSharp;
 using Newtonsoft.Json;
 
-namespace org.hopecorby.LocationService
+namespace org.arranf.IdealPostcodes.LocationService
 {
     /// <summary>
     /// The address lookup and geocoding service from <a href="https://ideal-postcodes.co.uk">Ideal Postcodes</a>
     /// </summary>
-    [Description("Address verification service from IdealPostcodes")]
+    [Description("A address verification and geocoding service from Ideal Postcodes")]
     [Export(typeof(VerificationComponent))]
     [ExportMetadata("ComponentName", "Ideal Postcodes")]
     [TextField("API Key", "Your Ideal Postcodes API Key", true, "", "", 2)]
