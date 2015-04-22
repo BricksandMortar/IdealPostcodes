@@ -23,7 +23,7 @@ namespace Rock.Address
     /// <summary>
     /// The address lookup and geocoding service from <a href="https://ideal-postcodes.co.uk">Ideal Postcodes</a>
     /// </summary>
-    [Description("A address verification and geocoding service from Ideal Postcodes")]
+    [Description("An address verification and geocoding service from Ideal Postcodes")]
     [Export(typeof(VerificationComponent))]
     [ExportMetadata("ComponentName", "Ideal Postcodes")]
     [TextField("API Key", "Your Ideal Postcodes API Key", true, "", "", 2)]
