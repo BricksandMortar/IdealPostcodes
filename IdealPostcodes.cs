@@ -38,6 +38,7 @@ namespace Rock.Address
         /// <returns>
         /// True/False value of whether the verification was successful or not
         /// </returns>
+
         public override bool VerifyLocation( Rock.Model.Location location, bool reVerify, out string result)
         {
             bool verified = false;
@@ -55,11 +56,13 @@ namespace Rock.Address
             {
 
                 string inputKey = GetAttributeValue( "APIKey" );
+                //Create request that encodes correctly
                 var addressParts = new string[] 
                 {location.Street1, location.Street2, location.City, location.PostalCode};
                 
                 string inputAddress = string.Join(" ", addressParts.Where(s => !string.IsNullOrEmpty(s)));
 
+                //restsharp API request
                 var client = new RestClient("https://api.ideal-postcodes.co.uk/");
                 var request = new RestRequest(Method.GET);
 				request.RequestFormat = DataFormat.Json;
@@ -70,6 +73,7 @@ namespace Rock.Address
                 var response = client.Execute( request );
 				
                 if (response.StatusCode == HttpStatusCode.OK)
+                    //Create a series of vars to make decoded response accessible
                 {
                     var droot = JsonConvert.DeserializeObject <RootObject>(response.Content);
                     var dresult = droot.result;
@@ -81,9 +85,10 @@ namespace Rock.Address
                                 result = string.Format( "UDPRN: {0}", address.udprn ); 
                                 location.Street1 = address.line_1;
                                 location.Street2 = address.line_2;
-                                location.City = address.post_town;
-                                string county = address.county;
-                                location.State = county;
+                                string city = address.post_town;
+                                city = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(city.ToLower());
+                                location.City = city;
+                                location.State = address.county;
                                 location.PostalCode = address.postcode;
                                 location.StandardizedDateTime = RockDateTime.Now;
                                 location.SetLocationPointFromLatLong( address.latitude, address.longitude );
