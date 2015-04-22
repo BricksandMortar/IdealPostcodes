@@ -75,12 +75,6 @@
   <ItemGroup>
     <Compile Include="IdealPostcodes.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\Visual Studio 2013\Projects\Rockit\org.hopecorby.rock.SampleProject\org.hopecorby.rock.SampleProject.csproj">
-      <Project>{496ec024-71ed-4ad1-b677-2a3fa60ccd05}</Project>
-      <Name>org.hopecorby.rock.SampleProject</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.Composition;
@@ -81,16 +82,8 @@ namespace Rock.Address
                                 location.Street1 = address.line_1;
                                 location.Street2 = address.line_2;
                                 location.City = address.post_town;
-                                    if (address.county != "")
-                                    {
-                                        location.State = address.county;
-                                        
-                                    }
-                                    else
-                                        {
-                                            location.State = address.district; 
-                                        }
-                               
+                                string county = address.county;
+                                location.State = county;
                                 location.PostalCode = address.postcode;
                                 location.StandardizedDateTime = RockDateTime.Now;
                                 location.SetLocationPointFromLatLong( address.latitude, address.longitude );
