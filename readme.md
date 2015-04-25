@@ -9,6 +9,15 @@ To download the latest release of the plugin in .dll format click [here](https:/
 ### A Quick Explanation
 This location service will pass the values (if any are present) of the address line 1, address line 2, city, state, and postal code fields from Rock to Ideal Postcodes. It will then ask for the best match and if values are present in the response it will replace the values stored in Rock with the response values.
 
+The matching is as follows
+
+Rock Field | Ideal Postcodes Data Source
+---- | ----
+Address 1 | Address Line 1
+Address 2 | Address Line 2
+City | Post Town (Lowercase)
+State | County
+
 **Note:**
 The use of the county address line was deprecated in 1996 and as a result not every request will return a matching county field. For example, 10 Downing Street does not have a county according to PAF data. 
 
