@@ -52,7 +52,9 @@ namespace Rock.Address
                     !location.GeocodeAttemptedDateTime.HasValue || 
                     location.GeocodeAttemptedDateTime.Value.CompareTo( RockDateTime.Now.AddSeconds(-30) ) > 0 ||
                     reVerify
-                ) )
+                ) &&
+                location.Country == "GB" &&
+                (string.IsNullOrWhiteSpace(location.Street1) || string.IsNullOrWhiteSpace(location.Street2)))
             {
 
                 string inputKey = GetAttributeValue( "APIKey" );
