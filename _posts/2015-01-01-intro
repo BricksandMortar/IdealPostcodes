@@ -1,0 +1,17 @@
+---
+title: "Ideal Postcodes"
+bg: white     
+color: blue
+style: center
+---
+
+# Ideal Postcodes Location Service
+<span class="fa-stack">
+  <i class="fa fa-circle fa-stack-2x text-white"></i>
+  <i class="fa fa-arrows fa-stack-1x text-blue"></i>
+</span>
+####Created by [Bricks and Mortar](http://bricksandmortarstudio.co.uk) for [Rock RMS](http://rockrms.com)
+
+This plugin provides verifies, standardises, and geocodes UK addresses using the [Ideal Postcodes](http://ideal-postcodes.co.uk) API.
+The source of this plugin is released on Github for use with the [Rockit SDK](http://www.rockrms.com/Rock/Developer).
+

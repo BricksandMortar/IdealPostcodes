@@ -1,0 +1,13 @@
+---
+title: "Information Explained"
+bg: white     
+color: black
+style: center
+fa-icon: info-circle
+---
+The use of the county address line was deprecated in 1996 and as a result not every request will return a matching county field. For example, 10 Downing Street does not have a county according to PAF data. 
+
+Ideal Postcodes uses three sources for county data. 
+>Normally, the postal county is returned. If this is not present, the county field will fall back to the administrative county. If the administrative county is also not present, the county field will fall back to the traditional county
+
+Ideal Postcodes will also geocode addresses using ONS and Ordanance Survey data. This information updates roughly quarterly so in certain situations information may not be available.

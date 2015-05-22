@@ -1,0 +1,36 @@
+---
+
+port: 4000
+host: 0.0.0.0
+safe: false
+
+
+### site serving configuration ###
+exclude: [CNAME, README.md, .gitignore]
+permalink: / ## disables post output
+timezone: null
+lsi: false
+markdown: kramdown
+highlighter: pygments
+
+
+### content configuration ###
+title:       "Bricks and Mortar | Ideal Postcodes"
+keywords:    "Ideal Postcodes, Rock RMS, ChMS, Bricks and Mortar"
+description: "The Bricks and Mortar Ideal Postcodes location service for Rock RMS"
+source_link: "https://github.com/arranf/IdealPostcodesLocationService"
+favicon:     #put a path like: "img/favicon.ico"
+touch_icon:  #put a path like: "img/apple-touch-icon.png"
+google_analytics_key: 
+
+
+### template colors, used site-wide via css ###
+colors:
+  black:     '#111111'
+  white:     '#f8f8f8'
+  blue:      '#49a7e9'
+  green:     '#9bcf2f'
+  purple:    '#c869bf'
+  orange:    '#fab125'
+  turquoise: '#0fbfcf'
+  
