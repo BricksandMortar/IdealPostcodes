@@ -1,4 +1,5 @@
 using System;
+using System.Configuration;
 using System.Globalization;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -57,10 +58,19 @@ namespace Rock.Address
             {
 
                 string inputKey = GetAttributeValue( "APIKey" );
-                //Create request that encodes correctly
-                var addressParts = new string[] 
-                {location.Street1, location.Street2, location.City, location.PostalCode};
+                var version = new Version( Rock.VersionInfo.VersionInfo.GetRockSemanticVersionNumber() );
+                string tags = string.Empty;
+                System.Data.Odbc.OdbcConnectionStringBuilder builder = new System.Data.Odbc.OdbcConnectionStringBuilder(ConfigurationManager.ConnectionStrings["RockContext"].ConnectionString);
+                object catalog = string.Empty;
+                if ( builder.TryGetValue("initial catalog", out catalog) )
+                {
+                   tags = string.Format("{0},{1}", version, catalog);
+                }
+
                 
+                //Create address that encodes correctly
+                var addressParts = new string[] 
+                {location.Street1, location.Street2, location.City, location.PostalCode};  
                 string inputAddress = string.Join(" ", addressParts.Where(s => !string.IsNullOrEmpty(s)));
 
                 //restsharp API request
@@ -71,6 +81,7 @@ namespace Rock.Address
                 request.AddParameter("api_key", inputKey);
                 request.AddParameter("query", inputAddress);
                 request.AddParameter("limit", "1");
+                request.AddParameter("tags", tags);
                 var response = client.Execute( request );
 				
                 if (response.StatusCode == HttpStatusCode.OK)
