@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Rock.Address</RootNamespace>
-    <AssemblyName>org.arranf.IdealPostcodes.LocationService</AssemblyName>
+    <AssemblyName>org.BricksandMortar.IdealPostcodesLocationService</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
