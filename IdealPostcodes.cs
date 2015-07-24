@@ -84,27 +84,27 @@ namespace Rock.Address
                     var hitresult = dresult.hits;
                         if (hitresult.Any())
                         {
-                                var address = hitresult.FirstOrDefault();
-                                verified = true;
-                                result = string.Format( "UDPRN: {0}", address.udprn ); 
-                                location.Street1 = address.line_1;
-                                location.Street2 = address.line_2;
-                                if (!string.IsNullOrWhiteSpace(address.dependant_locality) && address.dependant_locality != address.line_2)
-                                {
-                                    location.City = address.dependant_locality;
-                                }
-                                else
-                                {
-                                    string city = address.post_town;
-                                    city = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(city.ToLower());
-                                    location.City = city;
-                                }
+                            var address = hitresult.FirstOrDefault();
+                            verified = true;
+                            result = string.Format( "UDPRN: {0}", address.udprn ); 
+                            location.Street1 = address.line_1;
+                            location.Street2 = address.line_2;
+                            if (!string.IsNullOrWhiteSpace(address.dependant_locality) && address.dependant_locality != address.line_2)
+                            {
+                                location.City = address.dependant_locality;
+                            }
+                            else
+                            {
+                                string city = address.post_town;
+                                city = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(city.ToLower());
+                                location.City = city;
+                            }
                                 
-                                location.State = address.county;
-                                location.PostalCode = address.postcode;
-                                location.StandardizedDateTime = RockDateTime.Now;
-                                location.SetLocationPointFromLatLong( address.latitude, address.longitude );
-                                location.GeocodedDateTime = RockDateTime.Now;	
+                            location.State = address.county;
+                            location.PostalCode = address.postcode;
+                            location.StandardizedDateTime = RockDateTime.Now;
+                            location.SetLocationPointFromLatLong( address.latitude, address.longitude );
+                            location.GeocodedDateTime = RockDateTime.Now;	
                         }
                         else
                         {
