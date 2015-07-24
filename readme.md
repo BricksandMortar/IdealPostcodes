@@ -21,10 +21,20 @@ State | County
 **Note:**
 The use of the county address line was deprecated in 1996 and as a result not every request will return a matching county field. For example, 10 Downing Street does not have a county according to PAF data. 
 
-Ideal Postcodes uses three sources for county data. 
->Normally, the postal county is returned. If this is not present, the county field will fall back to the administrative county. If the administrative county is also not present, the county field will fall back to the traditional county
-
 Ideal Postcodes will also geocode addresses using ONS and Ordanance Survey data. This information updates roughly quarterly so in certain situations information may not be available.
+
+###Examples
+Addresses generated randomly from Google Maps data
+
+Input Address | Address 1 | Address 2 | City | County | Postcode
+---- | ---- | --- | --- | --- | ---
+6 Glenree, Alyth, Blairgowrie, Perth and Kinross PH11 8EA, UK | 6 Glenree | Alyth | Blairgowrie | Perthshire | PH11 8EA
+63A Bridge Street, Worksop, Nottinghamshire S80 1DG, UK | 63a Bridge Street | | Worksop | Nottinghamshire | S80 1DG
+South Downs National Park, 12 Fiona Close, Winchester, Hampshire SO23 0HB, UK | 12 Fiona Close | | Winchester |  Hampshire | SO23 0HB
+48 Acre Lane, Carshalton, Greater London SM5 3AB, UK | 48 Acre Lane | | Carshalton | Surrey | SM5 3AB
+4 Upper Achagoyle, Minard, Inveraray, Argyll and Bute PA32 8YF, UK | 4 Upper Achagoyle | Minard | Inveraray | Argyll | PA32 8YF
+
+ would standardize to 
 
 ### Closing
 If anything looks broken, flag up an issue. 
