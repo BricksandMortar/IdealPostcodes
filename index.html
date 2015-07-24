@@ -1,64 +1,93 @@
----
----
 <!DOCTYPE html>
-<html dir="ltr" lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{{ site.title }}</title>
-	<meta name="keywords" content="{{ site.keywords }}">
-	<meta name="description" content="{{ site.description }}">
-  <link rel="stylesheet" href="combo.css">
-  <link href='http://fonts.googleapis.com/css?family=Raleway:400,300,700' rel='stylesheet' type='text/css'>
-  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
-  {% if site.favicon %}<link rel="shortcut icon" href="{{ site.favicon }}" type="image/x-icon">{% endif %}
-	{% if site.touch_icon %}<link rel="apple-touch-icon" href="{{ site.touch_icon }}">{% endif %}
-</head>
-<body>
-  <div id="main">
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Ideal Postcodes Plugin by BricksandMortar</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Ideal Postcodes Plugin</h1>
+      <h2 class="project-tagline">An Ideal Postcodes Location Service for Rock RMS</h2>
+      <a href="https://github.com/BricksandMortar/IdealPostcodes" class="btn">View on GitHub</a>
+      <a href="https://github.com/BricksandMortar/IdealPostcodes/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/BricksandMortar/IdealPostcodes/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
 
-    <nav><ul>
-      {% for node in site.posts reversed %}
-        {% capture id %}{{ node.id | remove:'/' | downcase }}{% endcapture %}
-        <li class="p-{{id}}"><a href="#{{id}}">{{node.title}}</a></li>
-      {% endfor %}
-    </ul></nav>
+    <section class="main-content">
+      <h3>
+<a id="intro" class="anchor" href="#intro" aria-hidden="true"><span class="octicon octicon-link"></span></a>Intro</h3>
 
+<p>This is a location service for <a href="http://rockrms.com">Rock RMS</a> that verifies, standardises, and geocodes UK addresses using the <a href="http://ideal-postcodes.co.uk">Ideal Postcodes</a> API.</p>
 
-    {% for page in site.posts reversed %}
-      {% capture id %}{{ page.id | remove:'/' | downcase }}{% endcapture %}
-      <div id="{{id}}" class="section p-{{id}}">
-        {% if page.icon %}
-        <div class="subtlecircle sectiondivider imaged">
-          <img src="{{page.icon}}" alt="section icon" />
-          <h5 class="icon-title">{{ page.title }}</h5>
-        </div>
-        {% elsif page.fa-icon %}
-        <div class="subtlecircle sectiondivider faicon">
-          <span class="fa-stack">
-            <i class="fa fa-circle fa-stack-2x"></i>
-            <i class="fa fa-{{ page.fa-icon }} fa-stack-1x"></i>
-          </span>
-          <h5 class="icon-title">{{ page.title }}</h5>
-        </div>
-        {% endif %}
-        <div class="container {{ page.style }}">
-          {{ page.content }}
-        </div>
-      </div>
-    {% endfor %}
+<p>The repository includes the C# source for use with the <a href="http://www.rockrms.com/Rock/Developer">Rockit SDK</a>. 
+To download the latest release of the plugin in .dll format click <a href="https://github.com/arranf/IdealPostcodesLocationService/releases/latest">here</a>.</p>
 
+<h3>
+<a id="a-quick-explanation" class="anchor" href="#a-quick-explanation" aria-hidden="true"><span class="octicon octicon-link"></span></a>A Quick Explanation</h3>
 
-    <div id="footer" class="section text-white">
-      <div class="container">
-        {% capture foottext %} {% include footer.md %} {% endcapture %}
-        {{ foottext | markdownify }}
-      </div>
-    </div>
-  </div>
+<p>This location service will pass the values (if any are present) of the address line 1, address line 2, city, state, and postal code fields from Rock to Ideal Postcodes. It will then ask for the best match and if values are present in the response it will replace the values stored in Rock with the response values.</p>
 
-{% include analytics.html %}
-</body>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-<script src="site.js"></script>
+<p>The matching is as follows</p>
+
+<table>
+<thead>
+<tr>
+<th>Rock Field</th>
+<th>Ideal Postcodes Data Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Address 1</td>
+<td>Address Line 1</td>
+</tr>
+<tr>
+<td>Address 2</td>
+<td>Address Line 2</td>
+</tr>
+<tr>
+<td>City</td>
+<td>Post Town (Lowercase)</td>
+</tr>
+<tr>
+<td>State</td>
+<td>County</td>
+</tr>
+</tbody>
+</table>
+
+<p><strong>Note:</strong>
+The use of the county address line was deprecated in 1996 and as a result not every request will return a matching county field. For example, 10 Downing Street does not have a county according to PAF data. </p>
+
+<p>Ideal Postcodes uses three sources for county data. </p>
+
+<blockquote>
+<p>Normally, the postal county is returned. If this is not present, the county field will fall back to the administrative county. If the administrative county is also not present, the county field will fall back to the traditional county</p>
+</blockquote>
+
+<p>Ideal Postcodes will also geocode addresses using ONS and Ordanance Survey data. This information updates roughly quarterly so in certain situations information may not be available.</p>
+
+<h3>
+<a id="closing" class="anchor" href="#closing" aria-hidden="true"><span class="octicon octicon-link"></span></a>Closing</h3>
+
+<p>If anything looks broken, flag up an issue. </p>
+
+<p>This project is licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0.html">Apache 2.0 License</a>.</p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/BricksandMortar/IdealPostcodes">Ideal Postcodes Plugin</a> is maintained by <a href="https://github.com/BricksandMortar">BricksandMortar</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
 </html>
+
