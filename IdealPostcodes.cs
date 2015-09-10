@@ -20,7 +20,7 @@ namespace Rock.Address
     [Description( "An address verification and geocoding service from Ideal Postcodes" )]
     [Export( typeof( VerificationComponent ) )]
     [ExportMetadata( "ComponentName", "Ideal Postcodes" )]
-    [TextField( "API Key", "Your Ideal Postcodes API Key", true, "", "", 2 )]
+    [TextField( "API Key", "Your Ideal Postcodes API key (begins with ak_)", true, "", "", 2 )]
     public class IdealPostcodes : VerificationComponent
     {
         /// <summary>
@@ -158,7 +158,7 @@ namespace Rock.Address
 
 
 #pragma warning disable
-        public class Hit
+        public class ResultAddress
         {
             public string dependant_locality { get; set; }
             public string postcode_type { get; set; }
@@ -197,7 +197,7 @@ namespace Rock.Address
             public int total { get; set; }
             public int limit { get; set; }
             public int page { get; set; }
-            public List<Hit> hits { get; set; }
+            public List<ResultAddress> hits { get; set; }
         }
 
         public class RootObject
