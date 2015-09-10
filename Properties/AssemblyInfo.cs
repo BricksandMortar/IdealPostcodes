@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Bricks and Mortar")]
-[assembly: AssemblyProduct("Rock.Address.Properties")]
+[assembly: AssemblyProduct( "" )]
 [assembly: AssemblyCopyright("Copyright ©  2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -29,5 +29,5 @@ using System.Runtime.InteropServices;
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyVersion( "1.5.0.0" )]
-[assembly: AssemblyFileVersion( "1.5.0.0" )]
+[assembly: AssemblyVersion( "1.6.0.0" )]
+[assembly: AssemblyFileVersion( "1.6.0.0" )]
