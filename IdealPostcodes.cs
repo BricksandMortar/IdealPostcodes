@@ -6,11 +6,14 @@ using System.Configuration;
 using System.Globalization;
 using System.Linq;
 using System.Net;
+
+using Rock;
+using Rock.Attribute;
+using Rock.Address;
 using Newtonsoft.Json;
 using RestSharp;
-using Rock.Attribute;
 
-namespace Rock.Address
+namespace com.bricksandmortar.IdealPostcodes
 {
     /// <summary>
     /// The address lookup and geocoding service from <a href="https://ideal-postcodes.co.uk">Ideal Postcodes</a>
