@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.Configuration;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Net;
@@ -14,7 +15,7 @@ using Rock.Attribute;
 using Rock.Address;
 using Rock;
 
-namespace com.bricksandmortar.Address
+namespace com.bricksandmortarstudio.IdealPostcodes.Address
 {
     /// <summary>
     /// The address lookup and geocoding service from <a href="https://ideal-postcodes.co.uk">Ideal Postcodes</a>
@@ -44,11 +45,11 @@ namespace com.bricksandmortar.Address
             {
 
                 string inputKey = GetAttributeValue("APIKey");
-                string tags = null;
+                string tags;
                 CreateTags(out tags);
 
                 //Create address that encodes correctly
-                string inputAddress = null;
+                string inputAddress;
                 CreateInputAddress(location, out inputAddress);
 
                 //restsharp API request
@@ -65,13 +66,13 @@ namespace com.bricksandmortar.Address
                     {
                         var address = idealAddress.FirstOrDefault();
                         verified = true;
-                        result = string.Format("Verified by Ideal Postcodes UDPRN: {0}", address.udprn);
+                        // ReSharper disable once PossibleNullReferenceException
+                        result = $"Verified by Ideal Postcodes UDPRN: {address.udprn}";
                         UpdateLocation(location, address);
                     }
                     else
                     {
                         result = "No match.";
-                        verified = false;
                     }
                 }
                 else
@@ -92,9 +93,11 @@ namespace com.bricksandmortar.Address
 
         private IRestRequest BuildRequest(string inputKey, string inputAddress, string tags)
         {
-            var request = new RestRequest(Method.GET);
-            request.RequestFormat = DataFormat.Json;
-            request.Resource = "v1/addresses/";
+            var request = new RestRequest(Method.GET)
+            {
+                RequestFormat = DataFormat.Json,
+                Resource = "v1/addresses/"
+            };
             request.AddParameter("api_key", inputKey);
             request.AddParameter("query", inputAddress);
             request.AddParameter("limit", "1");
@@ -129,10 +132,10 @@ namespace com.bricksandmortar.Address
             tags = null;
             var version = new Version(Rock.VersionInfo.VersionInfo.GetRockSemanticVersionNumber());
             System.Data.Odbc.OdbcConnectionStringBuilder builder = new System.Data.Odbc.OdbcConnectionStringBuilder(ConfigurationManager.ConnectionStrings["RockContext"].ConnectionString);
-            object catalog = string.Empty;
+            object catalog;
             if (builder.TryGetValue("initial catalog", out catalog))
             {
-                tags = string.Format("{0},{1}", version, catalog);
+                tags = $"{version},{catalog}";
             }
         }
 
@@ -164,8 +167,8 @@ namespace com.bricksandmortar.Address
             location.GeocodedDateTime = RockDateTime.Now;
         }
 
-
-#pragma warning disable
+        
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
         public class ResultAddress
         {
             public string dependant_locality { get; set; }
@@ -200,6 +203,7 @@ namespace com.bricksandmortar.Address
             public double latitude { get; set; }
         }
 
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
         public class Result
         {
             public int total { get; set; }
@@ -208,12 +212,12 @@ namespace com.bricksandmortar.Address
             public List<ResultAddress> hits { get; set; }
         }
 
+        [SuppressMessage( "ReSharper", "InconsistentNaming" )]
         public class RootObject
         {
             public Result result { get; set; }
             public int code { get; set; }
             public string message { get; set; }
         }
-#pragma warning restore
     }
 }
