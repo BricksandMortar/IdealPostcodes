@@ -1,36 +1,53 @@
----
+# name of the software
+name: Generic Project
+# licence of the software
+license: Apache 2.0
+licenseUrl: http://www.apache.org/licenses/LICENSE-2.0.html
 
-port: 4000
-host: 0.0.0.0
-safe: false
+# list of additional links on the right of the top menu
+headerLinks:
+#  - title: GitHub
+#    url: https://github.com/mistic100/jekyll-bootstrap-doc
+
+# list if additional links on the footer
+footerLinks:
+  - title: <i class="fa fa-github"></i>GitHub
+    url: https://github.com/mistic100/jekyll-bootstrap-doc
+  - title: <i class="fa fa-exclamation-circle"></i>Issues
+    url: https://github.com/mistic100/jekyll-bootstrap-doc/issues?state=open
+
+# header
+header:
+  #color1: "#D43F3A"
+  #color2: "#D4813A"
+  color1: "#e64c29"
+  color2: "#e64c29"
+
+rockstore:
+  url:
+
+# google analytics
+analytics:
+  account:
+  domain:
+
+# github buttons
+github:
+  user: BricksandMortar
+  repo: IdealPostcodes
+
+# twitter buttons
+twitter:
+  enabled: true
+  via:
+  hash:
+  account: arranf
 
 
-### site serving configuration ###
-exclude: [CNAME, README.md, .gitignore]
-permalink: / ## disables post output
-timezone: null
-lsi: false
-markdown: kramdown
-highlighter: pygments
+exclude: ['README.md', 'LICENSE', 'bower.json', 'Gemfile.lock', 'Gemfile']
 
-
-### content configuration ###
-title:       "Bricks and Mortar | Ideal Postcodes"
-keywords:    "Ideal Postcodes, Rock RMS, ChMS, Bricks and Mortar"
-description: "The Bricks and Mortar Ideal Postcodes location service for Rock RMS"
-source_link: "https://github.com/arranf/IdealPostcodesLocationService"
-favicon:     #put a path like: "img/favicon.ico"
-touch_icon:  #put a path like: "img/apple-touch-icon.png"
-google_analytics_key: 
-
-
-### template colors, used site-wide via css ###
-colors:
-  black:     '#111111'
-  white:     '#f8f8f8'
-  blue:      '#49a7e9'
-  green:     '#9bcf2f'
-  purple:    '#c869bf'
-  orange:    '#fab125'
-  turquoise: '#0fbfcf'
-  
+gems:
+  - jekyll-mentions
+  - jemoji
+  - jekyll-redirect-from
+  - jekyll-sitemap
