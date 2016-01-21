@@ -48,7 +48,10 @@
         <ul class="nav navbar-nav">
         {% assign sorted_pages = site.pages | sort:"name" %}
         {% for p in sorted_pages %}
-          {% if p.hide != true and p.title !=  %}
+        <li>
+          <a href="{{site.github.url}}">Home</a>
+        </li>
+          {% if p.download != true and p.hide != true and p.title !=  %}
           <li {% if page.title == p.title %}class="active"{% endif %}>
             <a href="{{site.github.url}}{{p.url}}">{{p.title}}</a>
           </li>
