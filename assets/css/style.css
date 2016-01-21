@@ -6739,6 +6739,14 @@ a {
 a:hover {
   color: #407ce9;
 }
+span[data-type="action"] {
+  margin: 0 2px;
+  padding: 0px 5px;
+  border: 1px solid #ddd;
+  background-color: #f8f8f8;
+  border-radius: 3px;
+  font-family: Consolas, "Liberation Mono", Courier, monospace;
+}
 .bs-docs-masthead {
   padding-top: 50px;
   padding-bottom: 40px;
