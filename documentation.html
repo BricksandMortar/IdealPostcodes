@@ -6,105 +6,104 @@ download: false
 ---
 <section class="bs-docs-section">
   <!-- each section must contain ONE h1 with an id and optionally a "page-header" class -->
-  <h1 id="first-level" class="page-header">Setup</h1>
-  <h3 id="idealpostcodes-sub-section">Ideal Postcodes</h3>
+  <h1 id="setup" class="page-header">Setup</h1>
+  <h2 id="idealpostcodes-sub-section">Ideal Postcodes</h2>
   <p>To use this plugin you will need a <a href="https://ideal-postcodes.co.uk/">Ideal Postcodes account</a>. You can setup without payment with just an email address and password.</p>
   <p>When you've created a new account you will be prompted to create a new API key, which will come with 15 free lookups to test the service. Before you are able to use the service, and your new API key, you will need to authorise your account.
-  Once you have authorised your account you should see a confirmation screen (as shown below).
-  <img src="{{site.github.url}}/assets/images/Documentation/idealpostcodes-verifiedaccount.png" class="img-responsive" />
-  <h2 id="rock-sub-section">Rock</h2>
+    Once you have authorised your account you should see a confirmation screen (as shown below).
+    <img src="{{site.github.url}}/assets/images/Documentation/idealpostcodes-verifiedaccount.png" class="img-responsive" />
+    <h2 id="rock-sub-section">Rock</h2>
 
-  <p>Configuring your Rock instance to use Ideal Postcodes is easy. There are <strong>two</strong> simple changes that have to made. Firstly, visit <span data-type="action">Admin Tools > General Settings > Global Attributes</span> and set the <span data-type="action">Support International Addresses</span> value to <span data-type="action">Yes</span>. Secondly, visit <span data-type="action">Admin Tools > System Settings > Location Services</span> and select <span data-type="action">Ideal Postcodes</span> and change the service to <span data-type="action">Active</span> and paste the API key you generated in the previous step into the <span data-type="action">API Key</span> field. Your API key should begin with the prefix "ak_".
-</section>
+    <p>Configuring your Rock instance to use Ideal Postcodes is easy. There are <strong>two</strong> simple changes that have to made. Firstly, visit <span data-type="action">Admin Tools > General Settings > Global Attributes</span> and set the <span data-type="action">Support International Addresses</span> value to <span data-type="action">Yes</span>. Secondly, visit <span data-type="action">Admin Tools > System Settings > Location Services</span> and select <span data-type="action">Ideal Postcodes</span> and change the service to <span data-type="action">Active</span> and paste the API key you generated in the previous step into the <span data-type="action">API Key</span> field. Your API key should begin with the prefix "ak_".
+    </section>
 
-<section class="bs-docs-section">
-<h1 id="first-level" class="page-header">How the Plugin Functions</h1>
-This location service will pass the values (if any are present) of the address line 1, address line 2, city, state, and postal code fields from Rock to Ideal Postcodes. It will then ask for the best match and if values are present in the response it will replace the values stored in Rock with the response values.
+    <section class="bs-docs-section">
+      <h1 id="pluginfunction" class="page-header">How the Plugin Functions</h1>
+      This location service will pass the values (if any are present) of the address line 1, address line 2, city, state, and postal code fields from Rock to Ideal Postcodes. It will then ask for the best match and if values are present in the response it will replace the values stored in Rock with the response values.
 
-The matching is as follows
-<table class="table table-bordered">
-  <tr>
-  <th>Rock Field</th>
-  <th>Ideal Postcodes Data Source</th>
-</tr>
-  <tr>
-    <td>Address 1</td>
-    <td>Address Line 1</td>
-  </tr>
-  <tr>
-    <td>Address 2</td>
-    <td>Address Line 2</td>
-  </tr>
-  <tr>
-    <td>City</td>
-    <td>Post Town (as lowercase)</td>
-  </tr>
-  <tr>
-    <td>State</td>
-    <td>County</td>
-  </tr>
-</table>
-<h3 id="idealpostcodes-sub-section">A Note on Counties</h3>
-<p>The use of the county address line was deprecated in 1996 and as a result not every request will return a matching county field. For example, 10 Downing Street does not have a county according to PAF data.</p>
-</section>
+      The matching is as follows
+      <table class="table table-bordered">
+        <tr>
+          <th>Rock Field</th>
+          <th>Ideal Postcodes Data Source</th>
+        </tr>
+        <tr>
+          <td>Address 1</td>
+          <td>Address Line 1</td>
+        </tr>
+        <tr>
+          <td>Address 2</td>
+          <td>Address Line 2</td>
+        </tr>
+        <tr>
+          <td>City</td>
+          <td>Post Town (as lowercase)</td>
+        </tr>
+        <tr>
+          <td>State</td>
+          <td>County</td>
+        </tr>
+      </table>
+      <h3 id="counties-sub-section">A Note on Counties</h3>
+      <p>The use of the county address line was deprecated in 1996 and as a result not every request will return a matching county field. For example, 10 Downing Street does not have a county according to PAF data.</p>
+    </section>
 
-<section class="bs-docs-section">
-<h1 id="first-level" class="page-header">Example Address Standardisation</h1>
-<p>The table below is a selection of random address data from Google Maps standardised using Ideal Postcodes.</p>
+    <section class="bs-docs-section">
+      <h1 id="standardisationexample" class="page-header">Example Address Standardisation</h1>
+      <p>The table below is a selection of random address data from Google Maps standardised using Ideal Postcodes.</p>
 
-<table  class="table table-bordered">
-  <tr>
-    <th>Input Address</th>
-    <th>Address 1</th>
-    <th>Address 2</th>
-    <th>City</th>
-    <th>County</th>
-    <th>Postcode</th>
-  </tr>
-  <tr>
-    <td>6 Glenree, Alyth, Blairgowrie, Perth and Kinross PH11 8EA, UK</td>
-    <td>6 Glenree</td>
-    <td>Alyth</td>
-    <td>Blairgowrie</td>
-    <td>Perthshire</td>
-    <td>PH11 8EA</td>
-  </tr>
-  <tr>
-    <td>63A Bridge Street, Worksop, Nottinghamshire S80 1DG, UK</td>
-    <td>63a Bridge Street</td>
-    <td></td>
-    <td>Worksop</td>
-    <td>Nottinghamshire</td>
-    <td>S80 1DG</td>
-  </tr>
-  <tr>
-    <td>South Downs National Park, 12 Fiona Close, Winchester, Hampshire SO23 0HB, UK</td>
-    <td>12 Fiona Close</td>
-    <td></td>
-    <td>Winchester</td>
-    <td>Hampshire</td>
-    <td>SO23 0HB</td>
-  </tr>
-  <tr>
-    <td>48 Acre Lane, Carshalton, Greater London SM5 3AB, UK</td>
-    <td>48 Acre Lane</td>
-    <td></td>
-    <td>Carshalton</td>
-    <td>Surrey</td>
-    <td>SM5 3AB</td>
-  </tr>
-  <tr>
-    <td>4 Upper Achagoyle, Minard, Inveraray, Argyll and Bute PA32 8YF, UK</td>
-    <td>4 Upper Achagoyle</td>
-    <td>Minard</td>
-    <td>Inveraray</td>
-    <td>Argyll</td>
-    <td>PA32 8YF</td>
-  </tr>
-</table>
- </section>
-</section>
-<section>
-  <h1 id="first-level" class="page-header">Developers</h1>
-<p>The source code for the Ideal Postcodes Location Service is available for use with the <a href="http://www.rockrms.com/Rock/Developer">Rockit SDK</a> is available <a href="https://github.com/arranf/IdealPostcodesLocationService/releases/latest">here</a></p>.
-</section>
+      <table class="table table-bordered">
+        <tr>
+          <th>Input Address</th>
+          <th>Address 1</th>
+          <th>Address 2</th>
+          <th>City</th>
+          <th>County</th>
+          <th>Postcode</th>
+        </tr>
+        <tr>
+          <td>6 Glenree, Alyth, Blairgowrie, Perth and Kinross PH11 8EA, UK</td>
+          <td>6 Glenree</td>
+          <td>Alyth</td>
+          <td>Blairgowrie</td>
+          <td>Perthshire</td>
+          <td>PH11 8EA</td>
+        </tr>
+        <tr>
+          <td>63A Bridge Street, Worksop, Nottinghamshire S80 1DG, UK</td>
+          <td>63a Bridge Street</td>
+          <td></td>
+          <td>Worksop</td>
+          <td>Nottinghamshire</td>
+          <td>S80 1DG</td>
+        </tr>
+        <tr>
+          <td>South Downs National Park, 12 Fiona Close, Winchester, Hampshire SO23 0HB, UK</td>
+          <td>12 Fiona Close</td>
+          <td></td>
+          <td>Winchester</td>
+          <td>Hampshire</td>
+          <td>SO23 0HB</td>
+        </tr>
+        <tr>
+          <td>48 Acre Lane, Carshalton, Greater London SM5 3AB, UK</td>
+          <td>48 Acre Lane</td>
+          <td></td>
+          <td>Carshalton</td>
+          <td>Surrey</td>
+          <td>SM5 3AB</td>
+        </tr>
+        <tr>
+          <td>4 Upper Achagoyle, Minard, Inveraray, Argyll and Bute PA32 8YF, UK</td>
+          <td>4 Upper Achagoyle</td>
+          <td>Minard</td>
+          <td>Inveraray</td>
+          <td>Argyll</td>
+          <td>PA32 8YF</td>
+        </tr>
+      </table>
+    </section>
+    <section class="bs-docs-section">
+      <h1 id="developers" class="page-header">Developers</h1>
+    <p>The source code for the {{site.name}} is available for use with the <a href="http://www.rockrms.com/Rock/Developer">Rockit SDK</a> is available <a href="https://github.com/{{site.github.user}}/{{site.github.repo}}/releases/latest">here</a></p>.
+    </section>
