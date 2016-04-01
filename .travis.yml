@@ -1,24 +1,14 @@
 language: ruby
 rvm:
 - 2.1
-
-before_install:
-  - chmod +x ./script/ciinstall
-  - openssl aes-256-cbc -K $encrypted_03e9216d9c05_key -iv $encrypted_03e9216d9c05_iv -in .deploy_key.enc -out .deploy_key -d
-  - chmod 600 .deploy_key
-
-install: ./script/ciinstall
-
-# Assume bundler is being used, therefore
-# the `install` step will run `bundle install` by default.
+before_install: chmod +x ./script/ciinstall
+install: "./script/ciinstall"
 script: bundle exec rake deploy
-
 branches:
   only:
-  - pages-ci     # test the gh-pages branch
-
+  - pages-ci
 env:
   global:
-  - NOKOGIRI_USE_SYSTEM_LIBRARIES=true # speeds up installation of html-proofer
-
-sudo: false # route your build to the container-based infrastructure for a faster build
+  - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
+  - secure: RNOsC6PXcZE32XC/kj1pYrKVOxuEJ6GDp3aQuinZ3cO1g7U+6OhRLDSs3DoO15WYSh0SM09g2gehAIBxC8Z8odwVE9JXNssv91+opOTD8pY6v0WSRBuc5GU5MiUFr8sHqAN4AgWFw2wU0McUZ4ZcBAciU/fD4iqbqYP1QE7WBgXBkJPcKmTLCz2GkVruhFhHNzQrS1bV53JexBFGaBPXCrepaNpQ9jRxZe8Kfr/2r5Tn7L8AzKxzFxvioIGVDUhsy7rVl2JNdDXiugnYNneKwdyrMfIQgD0FSXtMOsrXm6cIEki6EMHHoNYfMYQFwbv/i8gdsxfXy/Ngld/EvpqCaZZrS80gW0C7RgU6gfybzSv4kHIVEWjzeYsuQlbBmKEe3tSVwuXxAULXgTn93SFx3UIRLTXHCr7rrPPP5vjwybUDVtimMri6dSCbaD79XSqauL1lCaTUyNpYWDDJIllOvN15hofB+SeX7/1DQ1eba+QzqU313ysIAFWgREuYrfuZlBggNAGKODXgmpiZX6P52jCH9XOg6mcKLuwKuOuOvUjAM/HVGBgPXApHc/iO2+5GZak67/u9y9HHZIvOLdOo8aWxBjvmfQ9mxMFQ/7wUjQciOFlYDRyH8GdL50AAXrGbUu325IRfQV0d4c1NHNtXdhCPVZZh/N+GcunVbktR1Zo=
+sudo: false
