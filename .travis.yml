@@ -2,7 +2,7 @@ language: ruby
 rvm:
 - 2.2
 before_install: chmod +x ./script/ciinstall.sh
-install: ./script/ciinstall
+install: ./script/ciinstall.sh
 before_script:
   - chmod +x ./script/cibuild.sh
   - chmod +x ./script/deploy.sh
