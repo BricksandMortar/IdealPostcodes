@@ -4,3 +4,4 @@ _site/
 obj/
 bin/
 .deploy_key
+.vs/
