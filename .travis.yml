@@ -15,7 +15,7 @@ script: bundle exec rake deploy
 
 branches:
   only:
-  - gh-pages     # test the gh-pages branch
+  - pages-ci     # test the gh-pages branch
 
 env:
   global:
