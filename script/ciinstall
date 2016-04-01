@@ -6,3 +6,4 @@ git clone --depth=50 --branch=gh-pages https://github.com/BricksandMortar/plugin
 rm -rf plugin-doc-template/.git
 cp -r -n plugin-doc-template/* $TRAVIS_BUILD_DIR/
 cd $TRAVIS_BUILD_DIR
+ gem install jekyll html-proofer rake rake-jekyll github-pages wdm
