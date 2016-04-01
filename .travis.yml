@@ -2,8 +2,11 @@ language: ruby
 rvm:
 - 2.1
 before_install: chmod +x ./script/ciinstall
-install: "./script/ciinstall"
-script: bundle exec rake deploy
+install: ./script/ciinstall
+before_script:
+script:
+  - ./script/cibuild
+  - bundle exec rake deploy
 branches:
   only:
   - pages-ci
