@@ -6,7 +6,7 @@ rm -rf ./_site || exit 0;
 
 ./script/cibuild.sh
 
-cd /_site
+cd $TRAVIS_BUILD_DIR/_site
 git init
 
 # inside this git repo we'll pretend to be a new user
