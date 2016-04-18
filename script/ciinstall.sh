@@ -9,3 +9,4 @@ cd $TRAVIS_BUILD_DIR
 #gem install jekyll html-proofer rake rake-jekyll github-pages wdm
 bundle install
 sed -i -e 's/$VERSION_NUMBER/'$TRAVIS_BUILD_NUMBER'/g' ./_layouts/*.html
+sed -i -e  's/'#baseurl'/baseurl/' ./_config.yml
