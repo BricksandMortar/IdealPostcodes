@@ -124,3 +124,5 @@ com.bricksandmortarstudio.IdealPostcodes.cs
 Properties/AssemblyInfo.cs
 readme.md
 #Endignore copied from other repo branch
+.bundle/config
+Gemfile.lock
