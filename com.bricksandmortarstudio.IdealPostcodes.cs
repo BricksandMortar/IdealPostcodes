@@ -60,7 +60,12 @@ namespace com.bricksandmortarstudio.IdealPostcodes.Address
                 if (response.StatusCode == HttpStatusCode.OK)
                 //Create a series of vars to make decoded response accessible
                 {
-                    var idealResponse = JsonConvert.DeserializeObject<RootObject>(response.Content);
+                    var settings = new JsonSerializerSettings
+                    {
+                        NullValueHandling = NullValueHandling.Ignore,
+                        MissingMemberHandling = MissingMemberHandling.Ignore
+                    };
+                    var idealResponse = JsonConvert.DeserializeObject<RootObject>(response.Content, settings);
                     var idealAddress = idealResponse.result.hits;
                     if (idealAddress.Any())
                     {
@@ -145,7 +150,7 @@ namespace com.bricksandmortarstudio.IdealPostcodes.Address
             inputAddress = string.Join(" ", addressParts.Where(s => !string.IsNullOrEmpty(s)));
         }
 
-        public void UpdateLocation(Rock.Model.Location location, dynamic address)
+        public void UpdateLocation(Rock.Model.Location location, ResultAddress address)
         {
             location.Street1 = address.line_1;
             location.Street2 = address.line_2;
@@ -163,7 +168,11 @@ namespace com.bricksandmortarstudio.IdealPostcodes.Address
             location.State = address.county;
             location.PostalCode = address.postcode;
             location.StandardizedDateTime = RockDateTime.Now;
-            location.SetLocationPointFromLatLong(address.latitude, address.longitude);
+            if ( address.latitude.HasValue && address.longitude.HasValue )
+            {
+                location.SetLocationPointFromLatLong( address.latitude.Value, address.longitude.Value );
+
+            }
             location.GeocodedDateTime = RockDateTime.Now;
         }
 
@@ -178,20 +187,20 @@ namespace com.bricksandmortarstudio.IdealPostcodes.Address
             public string delivery_point_suffix { get; set; }
             public string double_dependant_locality { get; set; }
             public string su_organisation_indicator { get; set; }
-            public double longitude { get; set; }
+            public double? longitude { get; set; }
             public string department_name { get; set; }
             public string district { get; set; }
             public string building_name { get; set; }
             public string dependant_thoroughfare { get; set; }
-            public int northings { get; set; }
+            public int? northings { get; set; }
             public string premise { get; set; }
             public string postcode_outward { get; set; }
             public string postcode_inward { get; set; }
             public string sub_building_name { get; set; }
-            public int eastings { get; set; }
+            public int? eastings { get; set; }
             public string postcode { get; set; }
             public string country { get; set; }
-            public int udprn { get; set; }
+            public int? udprn { get; set; }
             public string line_3 { get; set; }
             public string organisation_name { get; set; }
             public string ward { get; set; }
@@ -200,7 +209,7 @@ namespace com.bricksandmortarstudio.IdealPostcodes.Address
             public string building_number { get; set; }
             public string thoroughfare { get; set; }
             public string line_2 { get; set; }
-            public double latitude { get; set; }
+            public double? latitude { get; set; }
         }
 
         [SuppressMessage("ReSharper", "InconsistentNaming")]
