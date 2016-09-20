@@ -20,10 +20,10 @@ namespace com.bricksandmortarstudio.IdealPostcodes.Address
     /// <summary>
     /// The address lookup and geocoding service from <a href="https://ideal-postcodes.co.uk">Ideal Postcodes</a>
     /// </summary>
-    [Description("An address verification and geocoding service from Ideal Postcodes")]
-    [Export(typeof(VerificationComponent))]
-    [ExportMetadata("ComponentName", "Ideal Postcodes")]
-    [TextField("API Key", "Your Ideal Postcodes API key (begins with ak_)", true, "", "", 2)]
+    [Description( "An address verification and geocoding service from Ideal Postcodes" )]
+    [Export( typeof( VerificationComponent ) )]
+    [ExportMetadata( "ComponentName", "Ideal Postcodes" )]
+    [TextField( "API Key", "Your Ideal Postcodes API key (begins with ak_)", true, "", "", 2 )]
     public class IdealPostcodes : VerificationComponent
     {
         /// <summary>
@@ -36,55 +36,50 @@ namespace com.bricksandmortarstudio.IdealPostcodes.Address
         /// True/False value of whether the verification was successful or not
         /// </returns>
 
-        public override bool VerifyLocation(Rock.Model.Location location, bool reVerify, out string result)
+        public override VerificationResult Verify( Rock.Model.Location location, out string resultMsg )
         {
-            bool verified = false;
-            result = string.Empty;
+            resultMsg = string.Empty;
+            VerificationResult result = VerificationResult.None;
 
-            if (VerifyCheck(location, reVerify))
+
+            string inputKey = GetAttributeValue( "APIKey" );
+            string tags;
+            CreateTags( out tags );
+
+            //Create address that encodes correctly
+            string inputAddress;
+            CreateInputAddress( location, out inputAddress );
+
+            //restsharp API request
+            var client = new RestClient( "https://api.ideal-postcodes.co.uk/" );
+            var request = BuildRequest( inputKey, inputAddress, tags );
+            var response = client.Execute( request );
+
+            if ( response.StatusCode == HttpStatusCode.OK )
+            //Create a series of vars to make decoded response accessible
             {
-
-                string inputKey = GetAttributeValue("APIKey");
-                string tags;
-                CreateTags(out tags);
-
-                //Create address that encodes correctly
-                string inputAddress;
-                CreateInputAddress(location, out inputAddress);
-
-                //restsharp API request
-                var client = new RestClient("https://api.ideal-postcodes.co.uk/");
-                var request = BuildRequest(inputKey, inputAddress, tags);
-                var response = client.Execute(request);
-
-                if (response.StatusCode == HttpStatusCode.OK)
-                //Create a series of vars to make decoded response accessible
+                var settings = new JsonSerializerSettings
                 {
-                    var settings = new JsonSerializerSettings
-                    {
-                        NullValueHandling = NullValueHandling.Ignore,
-                        MissingMemberHandling = MissingMemberHandling.Ignore
-                    };
-                    var idealResponse = JsonConvert.DeserializeObject<RootObject>(response.Content, settings);
-                    var idealAddress = idealResponse.result.hits;
-                    if (idealAddress.Any())
-                    {
-                        var address = idealAddress.FirstOrDefault();
-                        verified = true;
-                        // ReSharper disable once PossibleNullReferenceException
-                        result = $"Verified by Ideal Postcodes UDPRN: {address.udprn}";
-                        UpdateLocation(location, address);
-                    }
-                    else
-                    {
-                        result = "No match.";
-                    }
+                    NullValueHandling = NullValueHandling.Ignore,
+                    MissingMemberHandling = MissingMemberHandling.Ignore
+                };
+                var idealResponse = JsonConvert.DeserializeObject<RootObject>( response.Content, settings );
+                var idealAddress = idealResponse.result.hits;
+                if ( idealAddress.Any() )
+                {
+                    var address = idealAddress.FirstOrDefault();
+                    resultMsg = $"Verified by Ideal Postcodes UDPRN: {address.udprn}";
+                    UpdateLocation( location, address );
+                    result = result | VerificationResult.Standardized;
                 }
                 else
                 {
-                    result = response.StatusDescription;
+                    resultMsg = "No match.";
                 }
-
+            }
+            else
+            {
+                result = VerificationResult.ConnectionError;
             }
 
             location.StandardizeAttemptedServiceType = "IdealPostcodes";
@@ -92,76 +87,53 @@ namespace com.bricksandmortarstudio.IdealPostcodes.Address
 
             location.GeocodeAttemptedServiceType = "IdealPostcodes";
             location.GeocodeAttemptedDateTime = RockDateTime.Now;
-
-            return verified;
+            return result;
         }
 
-        private IRestRequest BuildRequest(string inputKey, string inputAddress, string tags)
+        private IRestRequest BuildRequest( string inputKey, string inputAddress, string tags )
         {
-            var request = new RestRequest(Method.GET)
+            var request = new RestRequest( Method.GET )
             {
                 RequestFormat = DataFormat.Json,
                 Resource = "v1/addresses/"
             };
-            request.AddParameter("api_key", inputKey);
-            request.AddParameter("query", inputAddress);
-            request.AddParameter("limit", "1");
-            request.AddParameter("tags", tags);
+            request.AddParameter( "api_key", inputKey );
+            request.AddParameter( "query", inputAddress );
+            request.AddParameter( "limit", "1" );
+            request.AddParameter( "tags", tags );
             return request;
         }
 
-        public bool VerifyCheck(Rock.Model.Location location, bool reVerify)
-        {
-            // Check if the location is valid, has not been locked, and 
-            // has either never been attempted or last attempt was in last 30 secs (prev active service failed) or reverifying
-            if (location != null &&
-                !(location.IsGeoPointLocked ?? false) &&
-                (
-                    !location.GeocodeAttemptedDateTime.HasValue ||
-                    location.GeocodeAttemptedDateTime.Value.CompareTo(RockDateTime.Now.AddSeconds(-30)) > 0 ||
-                    reVerify
-                ) &&
-                location.Country == "GB" &&
-                (string.IsNullOrWhiteSpace(location.Street1) || string.IsNullOrWhiteSpace(location.Street2)))
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        public void CreateTags(out string tags)
+        public void CreateTags( out string tags )
         {
             tags = null;
-            var version = new Version(Rock.VersionInfo.VersionInfo.GetRockSemanticVersionNumber());
-            System.Data.Odbc.OdbcConnectionStringBuilder builder = new System.Data.Odbc.OdbcConnectionStringBuilder(ConfigurationManager.ConnectionStrings["RockContext"].ConnectionString);
+            var version = new Version( Rock.VersionInfo.VersionInfo.GetRockSemanticVersionNumber() );
+            System.Data.Odbc.OdbcConnectionStringBuilder builder = new System.Data.Odbc.OdbcConnectionStringBuilder( ConfigurationManager.ConnectionStrings["RockContext"].ConnectionString );
             object catalog;
-            if (builder.TryGetValue("initial catalog", out catalog))
+            if ( builder.TryGetValue( "initial catalog", out catalog ) )
             {
                 tags = $"{version},{catalog}";
             }
         }
 
-        public void CreateInputAddress(Rock.Model.Location location, out string inputAddress)
+        public void CreateInputAddress( Rock.Model.Location location, out string inputAddress )
         {
             var addressParts = new string[] { location.Street1, location.Street2, location.City, location.PostalCode };
-            inputAddress = string.Join(" ", addressParts.Where(s => !string.IsNullOrEmpty(s)));
+            inputAddress = string.Join( " ", addressParts.Where( s => !string.IsNullOrEmpty( s ) ) );
         }
 
-        public void UpdateLocation(Rock.Model.Location location, ResultAddress address)
+        public void UpdateLocation( Rock.Model.Location location, ResultAddress address )
         {
             location.Street1 = address.line_1;
             location.Street2 = address.line_2;
-            if (!string.IsNullOrWhiteSpace(address.dependant_locality) && address.dependant_locality != address.line_2)
+            if ( !string.IsNullOrWhiteSpace( address.dependant_locality ) && address.dependant_locality != address.line_2 )
             {
                 location.City = address.dependant_locality;
             }
             else
             {
                 string city = address.post_town;
-                city = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(city.ToLower());
+                city = CultureInfo.CurrentCulture.TextInfo.ToTitleCase( city.ToLower() );
                 location.City = city;
             }
 
@@ -176,8 +148,8 @@ namespace com.bricksandmortarstudio.IdealPostcodes.Address
             location.GeocodedDateTime = RockDateTime.Now;
         }
 
-        
-        [SuppressMessage("ReSharper", "InconsistentNaming")]
+
+        [SuppressMessage( "ReSharper", "InconsistentNaming" )]
         public class ResultAddress
         {
             public string dependant_locality { get; set; }
@@ -212,7 +184,7 @@ namespace com.bricksandmortarstudio.IdealPostcodes.Address
             public double? latitude { get; set; }
         }
 
-        [SuppressMessage("ReSharper", "InconsistentNaming")]
+        [SuppressMessage( "ReSharper", "InconsistentNaming" )]
         public class Result
         {
             public int total { get; set; }
