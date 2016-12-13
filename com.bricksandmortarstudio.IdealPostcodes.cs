@@ -39,7 +39,7 @@ namespace com.bricksandmortarstudio.IdealPostcodes.Address
         public override VerificationResult Verify( Rock.Model.Location location, out string resultMsg )
         {
             resultMsg = string.Empty;
-            VerificationResult result = VerificationResult.None;
+            var result = VerificationResult.None;
 
 
             string inputKey = GetAttributeValue( "APIKey" );
@@ -68,7 +68,7 @@ namespace com.bricksandmortarstudio.IdealPostcodes.Address
                 if ( idealAddress.Any() )
                 {
                     var address = idealAddress.FirstOrDefault();
-                    resultMsg = $"Verified by Ideal Postcodes UDPRN: {address.udprn}";
+                    resultMsg = string.Format("Verified by Ideal Postcodes UDPRN: {0}", address?.udprn);
                     UpdateLocation( location, address );
                     result = result | VerificationResult.Standardized;
                 }
@@ -90,7 +90,7 @@ namespace com.bricksandmortarstudio.IdealPostcodes.Address
             return result;
         }
 
-        private IRestRequest BuildRequest( string inputKey, string inputAddress, string tags )
+        private static IRestRequest BuildRequest( string inputKey, string inputAddress, string tags )
         {
             var request = new RestRequest( Method.GET )
             {
@@ -108,7 +108,7 @@ namespace com.bricksandmortarstudio.IdealPostcodes.Address
         {
             tags = null;
             var version = new Version( Rock.VersionInfo.VersionInfo.GetRockSemanticVersionNumber() );
-            System.Data.Odbc.OdbcConnectionStringBuilder builder = new System.Data.Odbc.OdbcConnectionStringBuilder( ConfigurationManager.ConnectionStrings["RockContext"].ConnectionString );
+            var builder = new System.Data.Odbc.OdbcConnectionStringBuilder( ConfigurationManager.ConnectionStrings["RockContext"].ConnectionString );
             object catalog;
             if ( builder.TryGetValue( "initial catalog", out catalog ) )
             {
