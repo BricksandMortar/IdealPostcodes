@@ -30,12 +30,10 @@ namespace com.bricksandmortarstudio.IdealPostcodes.Address
         /// Standardizes and Geocodes an address using the Ideal Postcodes service
         /// </summary>
         /// <param name="location">The location.</param>
-        /// <param name="reVerify">Should location be reverified even if it has already been succesfully verified</param>
-        /// <param name="result">The result code unique to the service.</param>
+        /// <param name="resultMsg">The result</param>
         /// <returns>
         /// True/False value of whether the verification was successful or not
         /// </returns>
-
         public override VerificationResult Verify( Rock.Model.Location location, out string resultMsg )
         {
             resultMsg = string.Empty;
@@ -43,8 +41,7 @@ namespace com.bricksandmortarstudio.IdealPostcodes.Address
 
 
             string inputKey = GetAttributeValue( "APIKey" );
-            string tags;
-            CreateTags( out tags );
+            string tags = CreateTags();
 
             //Create address that encodes correctly
             string inputAddress;
@@ -56,7 +53,7 @@ namespace com.bricksandmortarstudio.IdealPostcodes.Address
             var response = client.Execute( request );
 
             if ( response.StatusCode == HttpStatusCode.OK )
-            //Create a series of vars to make decoded response accessible
+            //Deserialize response into object
             {
                 var settings = new JsonSerializerSettings
                 {
@@ -68,9 +65,9 @@ namespace com.bricksandmortarstudio.IdealPostcodes.Address
                 if ( idealAddress.Any() )
                 {
                     var address = idealAddress.FirstOrDefault();
-                    resultMsg = string.Format("Verified by Ideal Postcodes UDPRN: {0}", address?.udprn);
-                    UpdateLocation( location, address );
-                    result = result | VerificationResult.Standardized;
+                    resultMsg = string.Format( "Verified by Ideal Postcodes UDPRN: {0}", address?.udprn );
+                    bool updateResult = UpdateLocation(location, address);
+                    result = updateResult ? VerificationResult.Geocoded : VerificationResult.Standardized;
                 }
                 else
                 {
@@ -90,6 +87,13 @@ namespace com.bricksandmortarstudio.IdealPostcodes.Address
             return result;
         }
 
+        /// <summary>
+        /// Builds a REST request 
+        /// </summary>
+        /// <param name="inputKey"></param>
+        /// <param name="inputAddress"></param>
+        /// <param name="tags"></param>
+        /// <returns></returns>
         private static IRestRequest BuildRequest( string inputKey, string inputAddress, string tags )
         {
             var request = new RestRequest( Method.GET )
@@ -104,25 +108,42 @@ namespace com.bricksandmortarstudio.IdealPostcodes.Address
             return request;
         }
 
-        public void CreateTags( out string tags )
+        /// <summary>
+        /// Combines the Rock semantic version number and the database name into a comma separated string
+        /// </summary>
+        /// <returns>A comma separated string of the Rock Semantic Version Number and the database name</returns>
+        public string CreateTags()
         {
-            tags = null;
+            string tags = string.Empty;
+
+            // Get Rock Version
             var version = new Version( Rock.VersionInfo.VersionInfo.GetRockSemanticVersionNumber() );
+            tags += version.ToString();
+
+            // Get database name
             var builder = new System.Data.Odbc.OdbcConnectionStringBuilder( ConfigurationManager.ConnectionStrings["RockContext"].ConnectionString );
             object catalog;
             if ( builder.TryGetValue( "initial catalog", out catalog ) )
             {
-                tags = $"{version},{catalog}";
+                tags += "," + catalog;
             }
+
+            return tags;
         }
 
         public void CreateInputAddress( Rock.Model.Location location, out string inputAddress )
         {
-            var addressParts = new string[] { location.Street1, location.Street2, location.City, location.PostalCode };
+            var addressParts = new[] { location.Street1, location.Street2, location.City, location.PostalCode };
             inputAddress = string.Join( " ", addressParts.Where( s => !string.IsNullOrEmpty( s ) ) );
         }
 
-        public void UpdateLocation( Rock.Model.Location location, ResultAddress address )
+        /// <summary>
+        /// Updates a Rock location to match an Ideal Postcodes ResultAddress
+        /// </summary>
+        /// <param name="location">The Rock location to be modified</param>
+        /// <param name="address">The IdeaL Postcodes ResultAddress to copy the data from</param>
+        /// <returns>Whether the Location was succesfully geocoded</returns>
+        public bool UpdateLocation( Rock.Model.Location location, ResultAddress address )
         {
             location.Street1 = address.line_1;
             location.Street2 = address.line_2;
@@ -140,12 +161,18 @@ namespace com.bricksandmortarstudio.IdealPostcodes.Address
             location.State = address.county;
             location.PostalCode = address.postcode;
             location.StandardizedDateTime = RockDateTime.Now;
-            if ( address.latitude.HasValue && address.longitude.HasValue )
-            {
-                location.SetLocationPointFromLatLong( address.latitude.Value, address.longitude.Value );
 
+            // If ResultAddress has geocoding data set it on Location
+            if (address.latitude.HasValue && address.longitude.HasValue)
+            {
+                bool setLocationResult = location.SetLocationPointFromLatLong(address.latitude.Value, address.longitude.Value);
+                if ( setLocationResult )
+                {
+                    location.GeocodedDateTime = RockDateTime.Now;
+                }
+                return setLocationResult;
             }
-            location.GeocodedDateTime = RockDateTime.Now;
+            return false;
         }
 
 
