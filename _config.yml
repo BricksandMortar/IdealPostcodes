@@ -4,6 +4,7 @@ name: Ideal Postcodes Location Service
 license: Apache 2.0
 licenseUrl: http://www.apache.org/licenses/LICENSE-2.0.html
 
+# This variable should be kept commented for local testing, it is uncommented by a script for production
 #baseurl: /IdealPostcodes
 
 # list of additional links on the right of the top menu
@@ -20,8 +21,6 @@ footerLinks:
 
 # header
 header:
-  #color1: "#D43F3A"
-  #color2: "#D4813A"
   color1: "#E64C29"
   color2: "#E64C29"
 
