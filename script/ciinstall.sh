@@ -13,3 +13,6 @@ bundle install
 
 # Replace the suffix $VERSION_NUMBER with the env variable $TRAVIS_BUILD_NUMBER on all assets to prevent caching 
 sed -i -e 's/$VERSION_NUMBER/'$TRAVIS_BUILD_NUMBER'/g' ./_layouts/*.html
+
+# Replace the commented base url variable (this is used to correctly build the site for production)
+sed -i -e  's/'#baseurl'/baseurl/' ./_config.yml 
