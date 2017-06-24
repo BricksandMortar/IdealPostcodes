@@ -2,7 +2,8 @@ language: ruby
 rvm:
   - 2.2
 before_install:
-  - curl -o ./script/ciinstall.sh -L -O https://raw.githubusercontent.com/BricksandMortar/Vibranium/gh-pages/script/ciinstall.sh
+  - mkdir ./script
+  - curl -L -o ./script/ciiinstall.sh https://raw.githubusercontent.com/BricksandMortar/Vibranium/gh-pages/script/ciinstall.sh
   - chmod +x ./script/ciinstall.sh
 install: ./script/ciinstall.sh
 before_script:
